@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style-tec.css" />
+    <title>Technical Document</title>
+</head>
+<body>
+    <nav id="navbar">
+        <header>MySQL</header>
+        <ul>
+            <li><a href="#what_is_mysql" class="nav-link">What is mySQL</a></li>
+            <li><a href="#Connecting_to_and_Disconnecting_from_the_Server" class="nav-link">Connecting to and Disconnecting from the Server</a></li>
+            <li><a href="#Creating_and_Selecting_a_Database" class="nav-link">Creating and Selecting a Database</a></li>
+            <li><a href="#Creating_a_Table" class="nav-link">Creating a Table</a></li>
+            <li><a href="#Loading_Data_into_a_Table" class="nav-link">Loading Data into a Table</a></li>
+        </ul>
+    </nav>
+    <main id="main-doc">
+
+        <section class="main-section" id="what_is_mysql">
+            <header>What is mySQL</header>
+            <p>MySQL, the most popular Open Source SQL database management system, is developed, distributed, and supported by Oracle Corporation. </p>
+            <p><b>MySQL is a database management system: </b>A database is a structured collection of data. It may be anything from a simple shopping list to a picture gallery or the vast amounts of information in a corporate network. To add, access, and process data stored in a computer database, you need a database management system such as MySQL Server. Since computers are very good at handling large amounts of data, database management systems play a central role in computing, as standalone utilities, or as parts of other applications. </p>
+            <p><b>MySQL databases are relational: </b>A relational database stores data in separate tables rather than putting all the data in one big storeroom. The database structures are organized into physical files optimized for speed. The logical model, with objects such as databases, tables, views, rows, and columns, offers a flexible programming environment. You set up rules governing the relationships between different data fields, such as one-to-one, one-to-many, unique, required or optional, and “pointers” between different tables. The database enforces these rules, so that with a well-designed database, your application never sees inconsistent, duplicate, orphan, out-of-date, or missing data. </p>
+            <p>The SQL part of “MySQL” stands for “Structured Query Language”. SQL is the most common standardized language used to access databases. Depending on your programming environment, you might enter SQL directly (for example, to generate reports), embed SQL statements into code written in another language, or use a language-specific API that hides the SQL syntax. </p>
+            <p>SQL is defined by the ANSI/ISO SQL Standard. The SQL standard has been evolving since 1986 and several versions exist. In this manual, “SQL-92” refers to the standard released in 1992, “SQL:1999” refers to the standard released in 1999, and “SQL:2003” refers to the current version of the standard. We use the phrase “the SQL standard” to mean the current version of the SQL Standard at any time. </p>
+
+        </section>
+        <section class="main-section" id="Connecting_to_and_Disconnecting_from_the_Server">
+            <header>Connecting to and Disconnecting from the Server</header>
+            <p>To connect to the server, you usually need to provide a MySQL user name when you invoke mysql and, most likely, a password. If the server runs on a machine other than the one where you log in, you must also specify a host name. Contact your administrator to find out what connection parameters you should use to connect (that is, what host, user name, and password to use). Once you know the proper parameters, you should be able to connect like this: </p>
+            <code> $> mysql -h host -u user -p</code>
+            <p>host and user represent the host name where your MySQL server is running and the user name of your MySQL account. Substitute appropriate values for your setup. The ******** represents your password; enter it when mysql displays the Enter password: prompt.</p>
+            <p>If that works, you should see some introductory information followed by a mysql> prompt: </p>
+            <code>$> mysql -h host -u user -p<br>
+                Enter password: ********<br>
+                Welcome to the MySQL monitor.  Commands end with ; or \g.<br>
+                Your MySQL connection id is 25338 to server version: 8.0.30-standard<br>
+                
+                Type 'help;' or '\h' for help. Type '\c' to clear the buffer.<br>
+                
+                mysql></code>
+            <p>If, when you attempt to log in, you get an error message such as ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2), it means that the MySQL server daemon (Unix) or service (Windows) is not running. Consult the administrator or see the section of Chapter 2, Installing and Upgrading MySQL that is appropriate to your operating system. </p>
+            <p>Some MySQL installations permit users to connect as the anonymous (unnamed) user to the server running on the local host. If this is the case on your machine, you should be able to connect to that server by invoking mysql without any options: </p>
+            <code>$> mysql</code>
+            <p>On Unix, you can also disconnect by pressing Control+D. </p>
+            <p>Most examples in the following sections assume that you are connected to the server. They indicate this by the mysql> prompt. </p>
+        </section>
+        <section class="main-section" id="Creating_and_Selecting_a_Database">
+            <header>Creating and Selecting a Database</header>
+            <p>If the administrator creates your database for you when setting up your permissions, you can begin using it. Otherwise, you need to create it yourself: </p>
+            <code>mysql> CREATE DATABASE menagerie;</code>
+            <p>Under Unix, database names are case-sensitive (unlike SQL keywords), so you must always refer to your database as menagerie, not as Menagerie, MENAGERIE, or some other variant. This is also true for table names. (Under Windows, this restriction does not apply, although you must refer to databases and tables using the same lettercase throughout a given query. However, for a variety of reasons, the recommended best practice is always to use the same lettercase that was used when the database was created.) </p>
+            <p>Creating a database does not select it for use; you must do that explicitly. To make menagerie the current database, use this statement: </p>
+            <code>mysql> USE menagerie<br>
+                Database changed</code>
+            <p>Your database needs to be created only once, but you must select it for use each time you begin a mysql session. You can do this by issuing a USE statement as shown in the example. Alternatively, you can select the database on the command line when you invoke mysql. Just specify its name after any connection parameters that you might need to provide. For example: </p>
+            <code>$> mysql -h host -u user -p menagerie<br>
+                Enter password: ********</code>
+            
+        </section>
+        <section class="main-section" id="Creating_a_Table">
+            <header>Creating a Table</header>
+            <p>Creating the database is the easy part, but at this point it is empty, as SHOW TABLES tells you: </p>
+            <code>mysql> SHOW TABLES;<br>
+                Empty set (0.00 sec)</code>
+            <p>The harder part is deciding what the structure of your database should be: what tables you need and what columns should be in each of them. </p>
+            <p>You want a table that contains a record for each of your pets. This can be called the pet table, and it should contain, as a bare minimum, each animal's name. Because the name by itself is not very interesting, the table should contain other information. For example, if more than one person in your family keeps pets, you might want to list each animal's owner. You might also want to record some basic descriptive information such as species and sex. </p>
+            <p>How about age? That might be of interest, but it is not a good thing to store in a database. Age changes as time passes, which means you'd have to update your records often. Instead, it is better to store a fixed value such as date of birth. Then, whenever you need age, you can calculate it as the difference between the current date and the birth date. MySQL provides functions for doing date arithmetic, so this is not difficult. Storing birth date rather than age has other advantages, too: </p>
+            <p><ol>
+                <li>You can use the database for tasks such as generating reminders for upcoming pet birthdays. </li>
+                <li>If you think this type of query is somewhat silly, note that it is the same question you might ask in the context of a business database to identify clients to whom you need to send out birthday greetings in the current week or month, for that computer-assisted personal touch.</li>
+                <li>You can calculate age in relation to dates other than the current date. </li>
+                <li>For example, if you store death date in the database, you can easily calculate how old a pet was when it died.</li>
+                <li>You may also use databases for storing data regarding employee information, and their respective tasks assigned.</li>
+            </ol></p>
+            <p>You can probably think of other types of information that would be useful in the pet table, but the ones identified so far are sufficient: name, owner, species, sex, birth, and death. </p>
+            <p>Use a CREATE TABLE statement to specify the layout of your table: </p>
+            <code>mysql> CREATE TABLE pet (name VARCHAR(20), owner VARCHAR(20),<br>
+                species VARCHAR(20), sex CHAR(1), birth DATE, death DATE);</code>
+            <p>VARCHAR is a good choice for the name, owner, and species columns because the column values vary in length. The lengths in those column definitions need not all be the same, and need not be 20. You can normally pick any length from 1 to 65535, whatever seems most reasonable to you. If you make a poor choice and it turns out later that you need a longer field, MySQL provides an ALTER TABLE statement. </p>
+            <p>Several types of values can be chosen to represent sex in animal records, such as 'm' and 'f', or perhaps 'male' and 'female'. It is simplest to use the single characters 'm' and 'f'. </p>
+            <p>The use of the DATE data type for the birth and death columns is a fairly obvious choice. </p>
+            <p>Once you have created a table, SHOW TABLES should produce some output: </p>
+            <code>mysql> SHOW TABLES;<br>
+                +---------------------+<br>
+                | Tables in menagerie |<br>
+                +---------------------+<br>
+                | pet                 |<br>
+                +---------------------+</code>
+            <p>To verify that your table was created the way you expected, use a DESCRIBE statement: </p>
+            <code>mysql> DESCRIBE pet;<br>
+                +---------+-------------+------+-----+---------+-------+<br>
+                | Field   | Type        | Null | Key | Default | Extra |<br>
+                +---------+-------------+------+-----+---------+-------+<br>
+                | name    | varchar(20) | YES  |     | NULL    |       |<br>
+                | owner   | varchar(20) | YES  |     | NULL    |       |<br>
+                | species | varchar(20) | YES  |     | NULL    |       |<br>
+                | sex     | char(1)     | YES  |     | NULL    |       |<br>
+                | birth   | date        | YES  |     | NULL    |       |<br>
+                | death   | date        | YES  |     | NULL    |       |<br>
+                +---------+-------------+------+-----+---------+-------+</code>
+            <p>You can use DESCRIBE any time, for example, if you forget the names of the columns in your table or what types they have. </p>
+        </section>
+        <section class="main-section" id="Loading_Data_into_a_Table">
+            <header>Loading Data into a Table</header>
+            <p>After creating your table, you need to populate it. The LOAD DATA and INSERT statements are useful for this. </p>
+            <p>Suppose that your pet records can be described as shown here. (Observe that MySQL expects dates in 'YYYY-MM-DD' format; this may differ from what you are used to.) </p>
+            <table>
+                <tr>
+                    <th>name</th>
+                    <th>owner</th>
+                    <th>species</th>
+                    <th>sex</th>
+                    <th>birth</th>
+                    <th>death</th>
+                </tr>
+                <tr>
+                    <th>Fluffy</th>
+                    <td>Harold</td>
+                    <td>cat</td>
+                    <td>f</td>
+                    <td>1993-02-04</td>
+                    <td>N/A</td>
+                </tr>
+                <tr>
+                    <th>Claws</th>
+                    <td>Gwen</td>
+                    <td>cat</td>
+                    <td>m</td>
+                    <td>1994-03-17</td>
+                    <td>N/A</td>
+                </tr>
+                <tr>
+                    <th>Buffy</th>
+                    <td>Harold</td>
+                    <td>dog</td>
+                    <td>f</td>
+                    <td>1989-05-13</td>
+                    <td>N/A</td>
+                </tr>
+            </table>
+            <p>Because you are beginning with an empty table, an easy way to populate it is to create a text file containing a row for each of your animals, then load the contents of the file into the table with a single statement. </p>
+            <p>You could create a text file pet.txt containing one record per line, with values separated by tabs, and given in the order in which the columns were listed in the CREATE TABLE statement. For missing values (such as unknown sexes or death dates for animals that are still living), you can use NULL values. To represent these in your text file, use \N (backslash, capital-N). </p>
+        </section>
+
+    </main>
+</body>
+</html>
